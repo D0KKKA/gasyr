@@ -13,5 +13,8 @@ router.register(r'phones', views.PhoneView)
 urlpatterns = [
     # Включение маршрутов из маршрутизатора
     path('', include(router.urls)),
-    path('registration/',views.RegistrationView.as_view(),name='user-registration')
+    path('registration/',views.RegistrationView.as_view(),name='user-registration'),
+    path('login/',views.LoginView.as_view(),name='user-login'),
+    path('logout/',views.LogoutView.as_view(),name='user-logout'),
+
 ]

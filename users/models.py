@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser,BaseUserManager
 from django.core.validators import RegexValidator, MinValueValidator
 from datetime import date, timedelta
 
@@ -14,8 +14,10 @@ ROLES = [
     (ADMIN, ADMIN),
 ]
 
+
+
 class User(AbstractUser):
-    username = models.CharField(max_length=150,blank=True,unique=False)
+    username= None
     first_name = models.CharField(max_length=150, blank=False)
     last_name = models.CharField(max_length=150, blank=False)
     email = models.EmailField(max_length=254, unique=True)
@@ -29,6 +31,8 @@ class User(AbstractUser):
             MinValueValidator(date.today()),
         ],
     )
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
     @property
     def is_admin(self):
@@ -44,7 +48,8 @@ class User(AbstractUser):
 
 class Phone(models.Model):
     phone_reg = RegexValidator(
-        regex=r"^\+7\d{10}$",
+        regex=r"\+7\d{10}",
+
         message="Номер телефона должен быть в формате: '+71234567890'. "
     )
     phone_number = models.CharField(validators=[phone_reg], max_length=16, unique=True)
