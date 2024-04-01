@@ -54,3 +54,6 @@ class Phone(models.Model):
     )
     phone_number = models.CharField(validators=[phone_reg], max_length=16, unique=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="phone")
+
+
+
