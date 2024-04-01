@@ -65,18 +65,21 @@ class LoginView(APIView):
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
+
     def post(self, request):
-        refresh_token = request.data.get('refresh_token')
-        if not refresh_token:
-            return Response({'error': 'Необходим Refresh token'},
-                            status=status.HTTP_400_BAD_REQUEST)
-        try:
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-        except Exception as e:
-            return Response({'error': 'Неверный Refresh token'},
-                            status=status.HTTP_400_BAD_REQUEST)
-        return Response({'success': 'Выход успешен'}, status=status.HTTP_200_OK)
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            # Обычно заголовок Authorization имеет формат "Bearer <token>",
+            # поэтому мы разделяем его и берем вторую часть
+            token_type, refresh_token = auth_header.split(' ', 1)
+            if token_type and refresh_token:
+                try:
+                    token = RefreshToken(refresh_token)
+                    token.blacklist()
+                except Exception as e:
+                    return Response({'error': 'Неверный Refresh token'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'success': 'Выход успешен'}, status=status.HTTP_200_OK)
+        return Response({'error': 'Отсутствует Refresh token'}, status=status.HTTP_400_BAD_REQUEST)
 
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
