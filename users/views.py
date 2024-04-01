@@ -53,7 +53,7 @@ class LoginView(APIView):
         refresh = RefreshToken.for_user(user)
         refresh.payload.update({
             'user_id': user.id,
-            'username': user.username
+            'email': user.email
         })
         return Response({
             'refresh': str(refresh),
