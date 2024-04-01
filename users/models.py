@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractUser,BaseUserManager
-from django.core.validators import RegexValidator, MinValueValidator
+from django.core.validators import RegexValidator, MinValueValidator,MaxValueValidator
 from datetime import date, timedelta
 
 USER = "user"
@@ -28,7 +28,7 @@ class User(AbstractUser):
         null=True,
         validators=[
             MinValueValidator(date.today() - timedelta(days=365 * 100)),
-            MinValueValidator(date.today()),
+            MaxValueValidator(date.today()),
         ],
     )
     USERNAME_FIELD = 'email'
