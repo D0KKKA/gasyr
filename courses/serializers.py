@@ -20,7 +20,7 @@ class VideoLessonSerializer(serializers.ModelSerializer):
 
 class UserLessonProgressSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserLessonProgress
+        model = models.UserLessonProgress
         fields = '__all__'
 
 

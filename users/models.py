@@ -48,7 +48,7 @@ class User(AbstractUser):
 
 class Phone(models.Model):
     phone_reg = RegexValidator(
-        regex=r"\+7\d{10}",
+        regex=r'^(\+?7|8)(\d{10})$',
 
         message="Номер телефона должен быть в формате: '+71234567890'. "
     )
