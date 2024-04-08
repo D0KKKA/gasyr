@@ -55,6 +55,8 @@ INSTALLED_APPS = [
 
 
     'users.apps.UsersConfig',
+    'courses.apps.CoursesConfig',
+
 ]
 
 
@@ -91,7 +93,7 @@ TEMPLATES = [
 
 AUTHENTICATION_BACKENDS = [
 
-    "allauth.account.auth_backends.AuthenticationBackend",
+    #"allauth.account.auth_backends.AuthenticationBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
 

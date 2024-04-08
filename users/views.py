@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth import login
 from rest_framework import viewsets,status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -49,16 +50,21 @@ class LoginView(APIView):
         serializer = serializers.LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
+        if user :
+            login(request,user)
 
-        refresh = RefreshToken.for_user(user)
-        refresh.payload.update({
-            'user_id': user.id,
-            'email': user.email
-        })
-        return Response({
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
-        }, status=status.HTTP_200_OK)
+
+            refresh = RefreshToken.for_user(user)
+            refresh.payload.update({
+                'user_id': user.id,
+                'email': user.email
+            })
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Invalid Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 
@@ -67,6 +73,7 @@ class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
+        logout(request)
         auth_header = request.headers.get('Authorization')
         if auth_header:
             # Обычно заголовок Authorization имеет формат "Bearer <token>",
