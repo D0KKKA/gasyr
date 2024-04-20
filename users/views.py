@@ -14,9 +14,6 @@ class UserView(viewsets.ModelViewSet):
     serializer_class=serializers.UserSerializer
 
 
-class PhoneView(viewsets.ModelViewSet):
-    queryset = models.Phone.objects.all()
-    serializer_class = serializers.PhoneSerializer
 
 
 User = get_user_model()

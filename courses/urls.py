@@ -1,16 +1,18 @@
-from django.urls import path, include
+from django.urls import path
 from rest_framework.routers import DefaultRouter
-from courses import views
-
+from .views import CourseListCreateView, CourseViewSet, LessonCreateView, LessonDetailView, UserCourseViewSet
+app_name = 'courses'
 router = DefaultRouter()
-router.register(r'courses', views.CourseView)
-router.register(r'user-courses', views.UserCourseView)
-router.register(r'video-lessons', views.VideoLessons)
-router.register(r'user-lesson-progress', views.UserLessonProgressViewSet)
 
+router.register(r'courses', CourseViewSet, basename='courses')
 
+router.register(r'user-courses', UserCourseViewSet, basename='user-courses')
 
 urlpatterns = [
-    path('',include(router.urls)),
-
+    path('courses/', CourseListCreateView.as_view(), name='course-list-create'),
+    path('courses/<int:course_id>/lessons/', LessonCreateView.as_view(), name='lesson-create'),
+    path('courses/<int:course_id>/lessons/<int:lesson_id>/', LessonDetailView.as_view(), name='lesson-detail'),
 ]
+
+# Добавляем урлы из роутера
+urlpatterns += router.urls

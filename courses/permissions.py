@@ -12,3 +12,17 @@ class IsAdminOrReadOnly(permissions.BasePermission):
 
         # Проверить, является ли пользователь администратором
         return request.user and request.user.is_staff
+
+
+class IsAuthenticatedOrReadOnly(permissions.BasePermission):
+    """
+    Разрешение, позволяющее чтение для неаутентифицированных пользователей,
+    но требующее аутентификацию для любых других операций.
+    """
+
+    def has_permission(self, request, view):
+        return bool(
+            request.method in permissions.SAFE_METHODS or
+            request.user and
+            request.user.is_authenticated
+        )

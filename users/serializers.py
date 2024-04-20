@@ -3,15 +3,12 @@ from users import models
 
 
 
-class PhoneSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Phone
-        fields="__all__"
+
 
 
 
 class UserSerializer(serializers.ModelSerializer):
-    phone = PhoneSerializer()
+
     class Meta:
         model = models.User
         fields="__all__"

@@ -8,7 +8,7 @@ router = routers.DefaultRouter()
 
 # Регистрация представлений в маршрутизаторе
 router.register(r'users', views.UserView)
-router.register(r'phones', views.PhoneView)
+
 
 urlpatterns = [
     # Включение маршрутов из маршрутизатора
