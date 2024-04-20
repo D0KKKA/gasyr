@@ -90,7 +90,6 @@ class LessonDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly, IsAdminOrReadOnly]
     lookup_url_kwarg = 'lesson_id'
 
-    # Методы аналогичны предыдущим...
 
 class UserCourseViewSet(viewsets.ModelViewSet):
     queryset = UserCourse.objects.all()
