@@ -1,28 +1,28 @@
 from rest_framework import permissions
 
-class IsAdminOrReadOnly(permissions.BasePermission):
+class IsAdminOrAuthenticated(permissions.BasePermission):
     """
-    Пользователи, имеющие административные права, могут выполнять любые действия,
-    в то время как обычные пользователи могут выполнять только чтение.
+    Разрешение для редактирования курсов только администраторам,
+    а доступ к курсам - только авторизованным пользователям.
     """
+
     def has_permission(self, request, view):
         # Разрешить GET, HEAD, OPTIONS запросы для всех пользователей
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        # Проверить, является ли пользователь администратором
+        # Разрешить доступ только администраторам для других методов
         return request.user and request.user.is_staff
 
+    def has_object_permission(self, request, view, obj):
+        # Разрешить доступ к курсам только авторизованным пользователям
+        # после оплаты
+        if request.method in permissions.SAFE_METHODS:
+            return True
 
-class IsAuthenticatedOrReadOnly(permissions.BasePermission):
-    """
-    Разрешение, позволяющее чтение для неаутентифицированных пользователей,
-    но требующее аутентификацию для любых других операций.
-    """
+        # Проверка оплаты для просмотра объектов
+        if request.user.is_authenticated and obj.is_paid:
+            return True
 
-    def has_permission(self, request, view):
-        return bool(
-            request.method in permissions.SAFE_METHODS or
-            request.user and
-            request.user.is_authenticated
-        )
+        # Разрешить доступ только администраторам для других действий
+        return request.user and request.user.is_staff

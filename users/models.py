@@ -26,12 +26,10 @@ class CustomUserManager(BaseUserManager):
 
 
 USER = "user"
-MODERATOR = "moderator"
 ADMIN = "admin"
 
 ROLES = [
     (USER, USER),
-    (MODERATOR, MODERATOR),
     (ADMIN, ADMIN),
 ]
 phone_reg = RegexValidator(

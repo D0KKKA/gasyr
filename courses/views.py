@@ -1,7 +1,7 @@
 from rest_framework import generics, status, viewsets
 from rest_framework.response import Response
 from .models import Course, Lesson, UserCourse
-from .permissions import IsAdminOrReadOnly,IsAuthenticatedOrReadOnly
+from .permissions import *
 from .serializers import (
     CourseSerializer,
     LessonSerializer,
@@ -21,7 +21,7 @@ class CourseListCreateView(generics.ListCreateAPIView):
     """
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAdminOrAuthenticated]
 
     def post(self, request):
         """
@@ -44,7 +44,7 @@ class CourseListCreateView(generics.ListCreateAPIView):
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrAuthenticated, ]
     lookup_field = 'id'
 
 
@@ -60,7 +60,7 @@ class LessonCreateView(generics.CreateAPIView):
     """
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrAuthenticated, ]
     lookup_url_kwarg = 'course_id'
 
     def post(self, request, course_id):
@@ -87,13 +87,13 @@ class LessonDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsAdminOrReadOnly]
+    permission_classes = [ IsAdminOrAuthenticated, ]
     lookup_url_kwarg = 'lesson_id'
 
 
 class UserCourseViewSet(viewsets.ModelViewSet):
     queryset = UserCourse.objects.all()
     serializer_class = UserCourseSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrAuthenticated ]
     lookup_field = 'id'
 

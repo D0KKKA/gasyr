@@ -14,5 +14,4 @@ urlpatterns = [
     path('courses/<int:course_id>/lessons/<int:lesson_id>/', LessonDetailView.as_view(), name='lesson-detail'),
 ]
 
-# Добавляем урлы из роутера
 urlpatterns += router.urls
