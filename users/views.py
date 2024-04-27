@@ -1,29 +1,38 @@
-from django.shortcuts import render
-from django.contrib.auth import login
-from rest_framework import viewsets,status
+from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny,IsAuthenticated
-from users import models,serializers
-from django.contrib.auth import get_user_model , authenticate,logout
-from rest_framework_simplejwt.tokens import RefreshToken ,AccessToken
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from django.contrib.auth import login, logout, get_user_model
+from rest_framework_simplejwt.tokens import RefreshToken
+from drf_yasg.utils import swagger_auto_schema
+from users import models, serializers
+
+User = get_user_model()
 
 
 class UserView(viewsets.ModelViewSet):
-    queryset= models.User.objects.all()
-    serializer_class=serializers.UserSerializer
+    """
+    Предоставляет CRUD-операции для пользователей.
+    """
+    queryset = models.User.objects.all()
+    serializer_class = serializers.UserSerializer
 
 
-
-
-User = get_user_model()
 class RegistrationView(APIView):
+    """
+    Регистрирует нового пользователя.
+    """
     permission_classes = [AllowAny]
-    def post(self,request):
-        serializer= serializers.UserRegistrationSerializer(data=request.data)
+
+    @swagger_auto_schema(
+        request_body=serializers.UserRegistrationSerializer,
+        responses={status.HTTP_201_CREATED: "User registered successfully"}
+    )
+    def post(self, request):
+        serializer = serializers.UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
-            user=serializer.save()
-            refresh=RefreshToken.for_user(user)
+            user = serializer.save()
+            refresh = RefreshToken.for_user(user)
             return Response({
                 "message": "User registered successfully",
                 "user": serializer.data,
@@ -34,23 +43,22 @@ class RegistrationView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
-
-
-
-
 class LoginView(APIView):
+    """
+    Авторизует пользователя.
+    """
     permission_classes = [AllowAny]
 
+    @swagger_auto_schema(
+        request_body=serializers.LoginSerializer,
+        responses={status.HTTP_200_OK: "Authentication successful"}
+    )
     def post(self, request):
         serializer = serializers.LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
-        if user :
-            login(request,user)
-
-
+        if user:
+            login(request, user)
             refresh = RefreshToken.for_user(user)
             refresh.payload.update({
                 'user_id': user.id,
@@ -64,30 +72,37 @@ class LoginView(APIView):
             return Response({'error': 'Invalid Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-
-
 class LogoutView(APIView):
+    """
+    Выход пользователя из системы.
+    """
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={status.HTTP_200_OK: "Logout successful"})
     def post(self, request):
         logout(request)
         auth_header = request.headers.get('Authorization')
         if auth_header:
-            # Обычно заголовок Authorization имеет формат "Bearer <token>",
-            # поэтому мы разделяем его и берем вторую часть
             token_type, refresh_token = auth_header.split(' ', 1)
             if token_type and refresh_token:
                 try:
                     token = RefreshToken(refresh_token)
                     token.blacklist()
                 except Exception as e:
-                    return Response({'error': 'Неверный Refresh token'}, status=status.HTTP_400_BAD_REQUEST)
-                return Response({'success': 'Выход успешен'}, status=status.HTTP_200_OK)
-        return Response({'error': 'Отсутствует Refresh token'}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({'error': 'Invalid Refresh token'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'success': 'Logout successful'}, status=status.HTTP_200_OK)
+        return Response({'error': 'Refresh token missing'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class UserProfileView(APIView):
+    """
+    Предоставляет профиль пользователя и позволяет его обновить.
+    """
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: "User profile retrieved successfully"}
+    )
     def get(self, request):
         try:
             user_profile = request.user
@@ -96,6 +111,10 @@ class UserProfileView(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    @swagger_auto_schema(
+        request_body=serializers.UserProfileSerializer,
+        responses={status.HTTP_200_OK: "User profile updated successfully"}
+    )
     def put(self, request):
         try:
             user_profile = request.user

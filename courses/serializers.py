@@ -2,22 +2,37 @@ from rest_framework import serializers
 from courses import models
 
 from rest_framework import serializers
-from .models import Course, Lesson, UserCourse
+from .models import *
 
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
-        fields = ['id', 'title', 'video']
+        fields = '__all__'
 
 class CourseSerializer(serializers.ModelSerializer):
     lessons = LessonSerializer(many=True, read_only=True)
 
     class Meta:
         model = Course
-        fields = ['id', 'title', 'description', 'price', 'duration', 'lessons']
+        fields = '__all__'
 
 class UserCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserCourse
-        fields = ['id', 'user', 'course', 'is_paid']
+        fields = '__all__'
+
+class CodeTaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CodeTask
+        fields = '__all__'
+
+class TestTaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TestTask
+        fields = '__all__'
+
+class UserLessonTaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserLessonTask
+        fields = '__all__'
 

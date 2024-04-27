@@ -26,3 +26,18 @@ class IsAdminOrAuthenticated(permissions.BasePermission):
 
         # Разрешить доступ только администраторам для других действий
         return request.user and request.user.is_staff
+
+
+class IsAdminOrReadOnly(permissions.BasePermission):
+    """
+    Разрешение для администраторов на редактирование и удаление,
+    но только для чтения для всех остальных пользователей.
+    """
+
+    def has_permission(self, request, view):
+        # Разрешить GET, HEAD, OPTIONS запросы для всех пользователей
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        # Разрешить доступ только администраторам для других методов
+        return request.user and request.user.is_staff
