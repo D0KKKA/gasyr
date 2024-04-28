@@ -14,7 +14,7 @@ class Course(models.Model):
         completed_lessons = self.user_courses.filter(user=user, completed_on__gte=100).count()
         if total_lessons > 0:
             completion_percentage = (completed_lessons / total_lessons) * 100
-            UserCourse.objects.filter(user=user, course=self).update(completed_on=completion_percentage)
+            UserCourse.objects.filter(user=user, course=self).update(completed_on=completion_percentage,is_complete=True)
 
     def __str__(self):
         return self.title
@@ -74,7 +74,7 @@ class UserLessonTask(models.Model):
     task_type = models.CharField(max_length=10, choices=(('CODE', 'Code'), ('TEST', 'Test')))
     task_id = models.PositiveIntegerField()  # ID задания (CodeTask или TestTask)
     is_completed = models.BooleanField(default=False)
-
+    completed_on = models.PositiveIntegerField(default=0)
     class Meta:
         unique_together = ('user', 'lesson', 'task_type', 'task_id')
 
