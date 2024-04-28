@@ -48,6 +48,7 @@ class User(AbstractUser):
     email = models.EmailField(max_length=254, unique=True)
     image = models.ImageField(blank=True, null=True, upload_to="users_photo")
     role = models.CharField(default=USER, choices=ROLES, max_length=9)
+    password_repeat = models.CharField(max_length=128)
 
     phone = models.CharField(validators=[phone_reg], max_length=16, unique=True)
     date_of_birth = models.DateField(

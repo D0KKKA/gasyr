@@ -22,10 +22,15 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'last_name',
             'email',
             'password',
+            'password_repeat',
             'phone',
         ]
         extra_kwargs = {'password': {'write_only': True}}
 
+    def validate(self, data):
+        if data['password'] != data.get('password_repeat'):
+            raise serializers.ValidationError("Пароли не совпадают")
+        return data
     def create(self, validated_data):
         user = models.User.objects.create(
             email=validated_data['email'],
@@ -34,6 +39,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             phone = validated_data['phone']
         )
         user.set_password(validated_data['password'])
+
         user.save()
 
         return user
