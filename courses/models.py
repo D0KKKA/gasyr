@@ -71,12 +71,12 @@ class TestTask(models.Model):
 class UserLessonTask(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     lesson = models.ForeignKey(Lesson, related_name='user_tasks', on_delete=models.CASCADE)
-    code_task = models.ForeignKey(CodeTask, related_name='user_code_tasks', on_delete=models.CASCADE)
-    test_task = models.ForeignKey(TestTask, related_name='user_test_tasks', on_delete=models.CASCADE)
-    solution_code = models.TextField()
-    is_correct = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    completed_on = models.PositiveIntegerField(default=0)
+    task_type = models.CharField(max_length=10, choices=(('CODE', 'Code'), ('TEST', 'Test')))
+    task_id = models.PositiveIntegerField()  # ID задания (CodeTask или TestTask)
+    is_completed = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('user', 'lesson', 'task_type', 'task_id')
 
     def __str__(self):
-        return f"User: {self.user.username}, Lesson: {self.lesson.title}"
+        return f"User: {self.user.username}, Lesson: {self.lesson.title}, Task Type: {self.task_type}"
