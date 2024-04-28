@@ -15,7 +15,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    phone_number = serializers.CharField(write_only=True)
     class Meta:
         model=models.User
         fields = [
@@ -23,21 +22,20 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'last_name',
             'email',
             'password',
-            'phone_number',
+            'phone',
         ]
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        phone_number = validated_data.pop('phone_number', None)
         user = models.User.objects.create(
             email=validated_data['email'],
             first_name=validated_data['first_name'],
-            last_name=validated_data['last_name']
+            last_name=validated_data['last_name'],
+            phone = validated_data['phone']
         )
         user.set_password(validated_data['password'])
         user.save()
-        if phone_number:
-            models.Phone.objects.create(phone_number=phone_number, user=user)
+
         return user
 
 
