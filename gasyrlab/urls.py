@@ -19,6 +19,7 @@ from django.urls import path,include,re_path
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
+from chat import routing
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -44,6 +45,7 @@ urlpatterns = [
     #сpath('accounts/', include('allauth.urls')),
     path('api/v1/users/',include('users.urls'),name='api_users'),
     path('api/v1/courses/',include('courses.urls'),name='api_courses'),
+    path('ws/', include(routing.websocket_urlpatterns)),
    # path('api/v1/rest-auth/', include('rest_auth.urls')),
     # path('api/v1/rest-auth/registration/',include('rest_auth.registration.urls')),
 

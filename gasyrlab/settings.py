@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'daphne',
     'django.contrib.staticfiles',
+
 
 
     'rest_framework',
@@ -54,12 +56,13 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
 
     'drf_yasg',
+    'channels',
 
 
 
     'users.apps.UsersConfig',
     'courses.apps.CoursesConfig',
-
+    'chat.apps.ChatConfig',
 ]
 
 
@@ -126,6 +129,18 @@ AUTH_USER_MODEL = 'users.User'
 SITE_ID = 1
 
 WSGI_APPLICATION = 'gasyrlab.wsgi.application'
+ASGI_APPLICATION = "gasyrlab.asgi.application"
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        # 'CONFIG': {
+        #     "hosts": [CHANNEL_REDIS_HOST],
+        #     "symmetric_encryption_keys": [SECRET_KEY],
+        #},
+    },
+}
+
 
 
 # Database
