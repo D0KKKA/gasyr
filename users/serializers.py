@@ -71,4 +71,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 
-
+class NotificationsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Notifications
+        fields = '__all__'

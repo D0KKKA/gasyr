@@ -1,4 +1,5 @@
 from rest_framework import viewsets, status
+from rest_framework.generics import DestroyAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -6,7 +7,8 @@ from django.contrib.auth import login, logout, get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
 from drf_yasg.utils import swagger_auto_schema
 from users import models, serializers
-
+from users.models import Notifications
+from users.serializers import NotificationsSerializer
 User = get_user_model()
 
 
@@ -126,3 +128,35 @@ class UserProfileView(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class NotificationListView(APIView):
+    """
+    получить список уведомлений для пользователя по айди пользоватеоля
+    """
+    def get(self,request,user_id):
+        try:
+            notifications=Notifications.objects.filter(user_id=user_id)
+            serializer = NotificationsSerializer(notifications, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Notifications.DoesNotExist:
+            return Response({"error": "Пользователь с указанным идентификатором не найден."},
+                            status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class NotificationDeleteView(DestroyAPIView):
+    """
+    удаление уведомления по айди
+    """
+    def delete(self, request, notification_id):
+        try:
+            notification = Notifications.objects.get(pk=notification_id)
+            notification.delete()
+            return Response({"message": "Уведомление успешно удалено."}, status=status.HTTP_204_NO_CONTENT)
+        except Notifications.DoesNotExist:
+            return Response({"error": "Уведомление с указанным идентификатором не найдено."},
+                            status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
