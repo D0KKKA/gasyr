@@ -9,6 +9,7 @@ router = routers.DefaultRouter()
 # Регистрация представлений в маршрутизаторе
 router.register(r'users', UserView)
 router.register(r'notifications', NotificationsViewSet)
+router.register(r'notes', NoteViewSet)
 
 
 urlpatterns = [

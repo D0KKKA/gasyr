@@ -174,3 +174,12 @@ class NotificationsViewSet(viewsets.ModelViewSet):
         notification = self.get_object()
         notification.toggle_favorite()
         return Response({'detail': 'Notification favorite status toggled.'}, status=status.HTTP_200_OK)
+
+
+class NoteViewSet(viewsets.ModelViewSet):
+    queryset = models.Notes.objects.all()
+    serializer_class = serializers.NoteSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
