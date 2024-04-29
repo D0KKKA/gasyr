@@ -1,5 +1,5 @@
 from rest_framework import viewsets, status
-from rest_framework.generics import DestroyAPIView
+from rest_framework.generics import DestroyAPIView, CreateAPIView,RetrieveAPIView,RetrieveUpdateDestroyAPIView, ListCreateAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -9,6 +9,7 @@ from drf_yasg.utils import swagger_auto_schema
 from users import models, serializers
 from users.models import Notifications
 from users.serializers import NotificationsSerializer
+from rest_framework.decorators import action
 User = get_user_model()
 
 
@@ -130,33 +131,46 @@ class UserProfileView(APIView):
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class NotificationListView(APIView):
-    """
-    получить список уведомлений для пользователя по айди пользоватеоля
-    """
-    def get(self,request,user_id):
-        try:
-            notifications=Notifications.objects.filter(user_id=user_id)
-            serializer = NotificationsSerializer(notifications, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Notifications.DoesNotExist:
-            return Response({"error": "Пользователь с указанным идентификатором не найден."},
-                            status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+class NotificationsListCreateView(ListCreateAPIView):
+    queryset = Notifications.objects.all()
+    serializer_class = NotificationsSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Notifications.objects.filter(user=user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class NotificationsDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = Notifications.objects.all()
+    serializer_class = NotificationsSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Notifications.objects.filter(user=user)
 
 
-class NotificationDeleteView(DestroyAPIView):
-    """
-    удаление уведомления по айди
-    """
-    def delete(self, request, notification_id):
-        try:
-            notification = Notifications.objects.get(pk=notification_id)
-            notification.delete()
-            return Response({"message": "Уведомление успешно удалено."}, status=status.HTTP_204_NO_CONTENT)
-        except Notifications.DoesNotExist:
-            return Response({"error": "Уведомление с указанным идентификатором не найдено."},
-                            status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+class NotificationsViewSet(viewsets.ModelViewSet):
+    queryset = Notifications.objects.all()
+    serializer_class = NotificationsSerializer
+
+    @action(detail=True, methods=['post'])
+    def mark_as_read(self, request, pk=None):
+        notification = self.get_object()
+        notification.mark_as_read()
+        return Response({'detail': 'Notification marked as read.'}, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def mark_as_unread(self, request, pk=None):
+        notification = self.get_object()
+        notification.mark_as_unread()
+        return Response({'detail': 'Notification marked as unread.'}, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def toggle_favorite(self, request, pk=None):
+        notification = self.get_object()
+        notification.toggle_favorite()
+        return Response({'detail': 'Notification favorite status toggled.'}, status=status.HTTP_200_OK)

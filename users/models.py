@@ -77,6 +77,20 @@ class Notifications(models.Model):
     title = models.CharField(max_length=255, blank=False)
     description = models.TextField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+    is_favorite = models.BooleanField(default=False)
+
+    def mark_as_read(self):
+        self.is_read = True
+        self.save()
+
+    def mark_as_unread(self):
+        self.is_read = False
+        self.save()
+
+    def toggle_favorite(self):
+        self.is_favorite = not self.is_favorite
+        self.save()
 
     def __str__(self):
         return self.title
