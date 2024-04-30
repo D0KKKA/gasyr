@@ -191,6 +191,13 @@ class NotificationsViewSet(viewsets.ModelViewSet):
         notification.toggle_favorite()
         return Response({'detail': 'Notification favorite status toggled.'}, status=status.HTTP_200_OK)
 
+    @action(detail=True, methods=['get'])
+    def favorites(self, request, pk=None):
+        user = request.user
+        favorite_notifications = self.queryset.filter(user=user, is_favorite=True)
+        serializer = self.get_serializer(favorite_notifications, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class NoteViewSet(viewsets.ModelViewSet):
     queryset = models.Notes.objects.all()
