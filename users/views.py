@@ -130,6 +130,22 @@ class UserProfileView(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    @swagger_auto_schema(
+        request_body=serializers.UserProfileSerializer,
+        responses={status.HTTP_200_OK: "User profile partially updated successfully"}
+    )
+    def patch(self, request):
+        try:
+            user_profile = request.user
+            serializer = serializers.UserProfileSerializer(user_profile, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class NotificationsListCreateView(ListCreateAPIView):
     queryset = Notifications.objects.all()
