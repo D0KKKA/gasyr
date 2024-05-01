@@ -158,6 +158,15 @@ class UserCourseViewSet(viewsets.ModelViewSet):
         """
         return super().destroy(request, *args, **kwargs)
 
+    @action(detail=False, methods=['get'])
+    def paid_courses(self, request):
+        """
+        Получить список оплаченных пользовательских курсов
+        """
+        user = request.user
+        paid_courses = self.queryset.filter(user=user, is_paid=True)
+        serializer = self.get_serializer(paid_courses, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 

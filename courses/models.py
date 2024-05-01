@@ -8,6 +8,7 @@ class Course(models.Model):
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     duration = models.CharField(max_length=255, help_text=_("Duration in days"))
+    is_free = models.BooleanField(default=False)
 
     def update_completion_percentage_for_user(self, user):
         total_lessons = self.lessons.count()
