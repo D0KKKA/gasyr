@@ -36,3 +36,9 @@ class UserLessonTaskSerializer(serializers.ModelSerializer):
         model = UserLessonTask
         fields = '__all__'
 
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
