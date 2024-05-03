@@ -17,7 +17,7 @@ class Course(models.Model):
     duration = models.CharField(max_length=255, help_text=_("Duration in days"))
     is_free = models.BooleanField(default=False)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-
+    image = models.ImageField(upload_to="course_image/")
 
     def update_completion_percentage_for_user(self, user):
         total_lessons = self.lessons.count()
@@ -33,7 +33,7 @@ class Lesson(models.Model):
     course = models.ForeignKey(Course, related_name='lessons', on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     description = models.TextField()
-    video = models.FileField(upload_to="lesson_videos")
+    video = models.FileField(upload_to="lesson_videos/")
     duration  = models.CharField(max_length=255, help_text=_("Duration in minutes"))
 
     def update_completion_percentage_for_user(self, user):

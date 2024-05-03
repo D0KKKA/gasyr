@@ -46,7 +46,7 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=150, blank=False)
     last_name = models.CharField(max_length=150, blank=False)
     email = models.EmailField(max_length=254, unique=True)
-    image = models.ImageField(blank=True, null=True, upload_to="users_photo")
+    image = models.ImageField(blank=True, null=True, upload_to="users_photo/")
     role = models.CharField(default=USER, choices=ROLES, max_length=9)
     password_repeat = models.CharField(max_length=128)
 

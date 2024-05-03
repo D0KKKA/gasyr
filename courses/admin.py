@@ -19,4 +19,7 @@ admin.site.register(
 admin.site.register(
     models.UserCourse
 )
+admin.site.register(
+    models.Category
+)
 
