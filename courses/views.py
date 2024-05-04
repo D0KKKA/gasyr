@@ -392,7 +392,7 @@ class UserLessonStatusView(APIView):
         user = request.user
         try:
             user_lesson = UserLesson.objects.get(user=user, lesson_id=lesson_id)
-            serializer = UserLessonSerializer(user_lesson)
+            serializer = UserLessonStatusSerializer(user_lesson)
             return Response(serializer.data)
         except UserLesson.DoesNotExist:
             return Response({"message": "Урок не найден"}, status=status.HTTP_404_NOT_FOUND)
@@ -411,7 +411,7 @@ class UserLessonStatusView(APIView):
             if view_status in ['viewed', 'not_viewed', 'started']:
                 user_lesson.view_status = view_status
                 user_lesson.save()
-                serializer = UserLessonSerializer(user_lesson)
+                serializer = UserLessonStatusSerializer(user_lesson)
                 return Response(serializer.data)
             else:
                 return Response({"message": "Неправильный статус просмотра"}, status=status.HTTP_400_BAD_REQUEST)
