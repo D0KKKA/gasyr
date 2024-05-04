@@ -130,33 +130,33 @@ class UserCourseViewSet(viewsets.ModelViewSet):
     #permission_classes = [IsAdminOrAuthenticated]
     lookup_field = 'id'
 
-    @swagger_auto_schema()
-    def create(self, request, *args, **kwargs):
-        """
-        Создать новый пользовательский курс
-        """
-        return super().create(request, *args, **kwargs)
-
-    @swagger_auto_schema()
-    def update(self, request, *args, **kwargs):
-        """
-        Обновить информацию о пользовательском курсе
-        """
-        return super().update(request, *args, **kwargs)
-
-    @swagger_auto_schema()
-    def partial_update(self, request, *args, **kwargs):
-        """
-        Частично обновить информацию о пользовательском курсе
-        """
-        return super().partial_update(request, *args, **kwargs)
-
-    @swagger_auto_schema()
-    def destroy(self, request, *args, **kwargs):
-        """
-        Удалить пользовательский курс
-        """
-        return super().destroy(request, *args, **kwargs)
+    # @swagger_auto_schema()
+    # def create(self, request, *args, **kwargs):
+    #     """
+    #     Создать новый пользовательский курс
+    #     """
+    #     return super().create(request, *args, **kwargs)
+    #
+    # @swagger_auto_schema()
+    # def update(self, request, *args, **kwargs):
+    #     """
+    #     Обновить информацию о пользовательском курсе
+    #     """
+    #     return super().update(request, *args, **kwargs)
+    #
+    # @swagger_auto_schema()
+    # def partial_update(self, request, *args, **kwargs):
+    #     """
+    #     Частично обновить информацию о пользовательском курсе
+    #     """
+    #     return super().partial_update(request, *args, **kwargs)
+    #
+    # @swagger_auto_schema()
+    # def destroy(self, request, *args, **kwargs):
+    #     """
+    #     Удалить пользовательский курс
+    #     """
+    #     return super().destroy(request, *args, **kwargs)
 
     @action(detail=False, methods=['get'])
     def paid_courses(self, request):
