@@ -3,6 +3,10 @@ from courses import models
 
 from rest_framework import serializers
 from .models import *
+class TopicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Topic
+        fields = '__all__'
 
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,7 +15,7 @@ class LessonSerializer(serializers.ModelSerializer):
 
 class CourseSerializer(serializers.ModelSerializer):
     lessons = LessonSerializer(many=True, read_only=True)
-
+    topics = TopicSerializer(many=True, read_only=True)
     class Meta:
         model = Course
         fields = '__all__'
@@ -49,3 +53,4 @@ class UserLessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserLesson
         fields = ['view_status',"lesson"]
+

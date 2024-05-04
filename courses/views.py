@@ -36,33 +36,33 @@ class CourseViewSet(viewsets.ModelViewSet):
     #permission_classes = [IsAdminOrAuthenticated]
     lookup_field = 'id'
 
-    @swagger_auto_schema()
-    def create(self, request, *args, **kwargs):
-        """
-        Создать новый курс
-        """
-        return super().create(request, *args, **kwargs)
-
-    @swagger_auto_schema()
-    def update(self, request, *args, **kwargs):
-        """
-        Обновить информацию о курсе
-        """
-        return super().update(request, *args, **kwargs)
-
-    @swagger_auto_schema()
-    def partial_update(self, request, *args, **kwargs):
-        """
-        Частично обновить информацию о курсе
-        """
-        return super().partial_update(request, *args, **kwargs)
-
-    @swagger_auto_schema()
-    def destroy(self, request, *args, **kwargs):
-        """
-        Удалить курс
-        """
-        return super().destroy(request, *args, **kwargs)
+    # @swagger_auto_schema()
+    # def create(self, request, *args, **kwargs):
+    #     """
+    #     Создать новый курс
+    #     """
+    #     return super().create(request, *args, **kwargs)
+    #
+    # @swagger_auto_schema()
+    # def update(self, request, *args, **kwargs):
+    #     """
+    #     Обновить информацию о курсе
+    #     """
+    #     return super().update(request, *args, **kwargs)
+    #
+    # @swagger_auto_schema()
+    # def partial_update(self, request, *args, **kwargs):
+    #     """
+    #     Частично обновить информацию о курсе
+    #     """
+    #     return super().partial_update(request, *args, **kwargs)
+    #
+    # @swagger_auto_schema()
+    # def destroy(self, request, *args, **kwargs):
+    #     """
+    #     Удалить курс
+    #     """
+    #     return super().destroy(request, *args, **kwargs)
 
     @action(detail=True, methods=['get'])
     def list_lessons_by_course_id(self, request, id=None):
@@ -138,33 +138,6 @@ class UserCourseViewSet(viewsets.ModelViewSet):
     #permission_classes = [IsAdminOrAuthenticated]
     lookup_field = 'id'
 
-    # @swagger_auto_schema()
-    # def create(self, request, *args, **kwargs):
-    #     """
-    #     Создать новый пользовательский курс
-    #     """
-    #     return super().create(request, *args, **kwargs)
-    #
-    # @swagger_auto_schema()
-    # def update(self, request, *args, **kwargs):
-    #     """
-    #     Обновить информацию о пользовательском курсе
-    #     """
-    #     return super().update(request, *args, **kwargs)
-    #
-    # @swagger_auto_schema()
-    # def partial_update(self, request, *args, **kwargs):
-    #     """
-    #     Частично обновить информацию о пользовательском курсе
-    #     """
-    #     return super().partial_update(request, *args, **kwargs)
-    #
-    # @swagger_auto_schema()
-    # def destroy(self, request, *args, **kwargs):
-    #     """
-    #     Удалить пользовательский курс
-    #     """
-    #     return super().destroy(request, *args, **kwargs)
 
     @action(detail=False, methods=['get'])
     def paid_courses(self, request):
@@ -430,11 +403,7 @@ class UserLessonStatusView(APIView):
         принимает параметры 'viewed', 'not_viewed', 'started' и lesson_id
 
         '''
-        '''
-        :param request: 
-        :param lesson_id: 
-        :return: 
-        '''
+
         user = request.user
         try:
             user_lesson = UserLesson.objects.get(user=user, lesson_id=lesson_id)
@@ -451,3 +420,6 @@ class UserLessonStatusView(APIView):
 
 
 
+class TopicView(viewsets.ModelViewSet):
+    serializer_class = TopicSerializer
+    queryset = Topic.objects.all()

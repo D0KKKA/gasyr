@@ -28,10 +28,16 @@ class Course(models.Model):
 
     def __str__(self):
         return self.title
+class Topic(models.Model):
+    title = models.CharField(max_length=255)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.title
 class Lesson(models.Model):
 
     course = models.ForeignKey(Course, related_name='lessons', on_delete=models.CASCADE)
+    topic = models.ForeignKey(Topic, related_name='lessons', on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     description = models.TextField()
     info_text = models.TextField()

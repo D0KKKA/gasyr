@@ -25,4 +25,7 @@ admin.site.register(
 admin.site.register(
     models.UserLesson
 )
+admin.site.register(
+    models.Topic
+)
 

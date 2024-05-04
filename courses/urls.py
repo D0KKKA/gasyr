@@ -23,5 +23,6 @@ router = DefaultRouter()
 router.register(r'user_lesson_tasks', UserLessonTaskViewSet, basename='user-lesson-task')
 router.register(r'courses', CourseViewSet, basename='course')
 router.register(r'user_courses', UserCourseViewSet, basename='user-course')
+router.register(r'topic', TopicView, basename='topic')
 
 urlpatterns += router.urls
