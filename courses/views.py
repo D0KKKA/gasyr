@@ -411,7 +411,43 @@ class CategoryView(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
 
+class UserLessonStatusView(APIView):
+    '''
+    получить статус просмотра урока пользователем
+    '''
+    def get(self, request, lesson_id):
+        user = request.user
+        try:
+            user_lesson = UserLesson.objects.get(user=user, lesson_id=lesson_id)
+            serializer = UserLessonSerializer(user_lesson)
+            return Response(serializer.data)
+        except UserLesson.DoesNotExist:
+            return Response({"message": "Урок не найден"}, status=status.HTTP_404_NOT_FOUND)
 
+    def patch(self, request, lesson_id):
+        '''
+        обновляет статус просмотра курса
+        принимает параметры 'viewed', 'not_viewed', 'started' и lesson_id
+
+        '''
+        '''
+        :param request: 
+        :param lesson_id: 
+        :return: 
+        '''
+        user = request.user
+        try:
+            user_lesson = UserLesson.objects.get(user=user, lesson_id=lesson_id)
+            view_status = request.data.get('view_status')
+            if view_status in ['viewed', 'not_viewed', 'started']:
+                user_lesson.view_status = view_status
+                user_lesson.save()
+                serializer = UserLessonSerializer(user_lesson)
+                return Response(serializer.data)
+            else:
+                return Response({"message": "Неправильный статус просмотра"}, status=status.HTTP_400_BAD_REQUEST)
+        except UserLesson.DoesNotExist:
+            return Response({"message": "Урок не найден"}, status=status.HTTP_404_NOT_FOUND)
 
 
 

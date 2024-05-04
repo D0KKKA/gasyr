@@ -22,4 +22,7 @@ admin.site.register(
 admin.site.register(
     models.Category
 )
+admin.site.register(
+    models.UserLesson
+)
 

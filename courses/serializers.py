@@ -44,3 +44,8 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class UserLessonSerializer(serializers.ModelSerializer):
+    lesson = LessonSerializer(read_only=True)
+    class Meta:
+        model = UserLesson
+        fields = ['view_status',"lesson"]

@@ -30,12 +30,15 @@ class Course(models.Model):
         return self.title
 
 class Lesson(models.Model):
+
     course = models.ForeignKey(Course, related_name='lessons', on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     description = models.TextField()
     info_text = models.TextField()
     video = models.FileField(upload_to="lesson_videos/")
     duration  = models.CharField(max_length=255, help_text=_("Duration in minutes"))
+
+
 
     def update_completion_percentage_for_user(self, user):
         total_tasks = self.code_tasks.count() + self.test_tasks.count()
@@ -45,7 +48,7 @@ class Lesson(models.Model):
         ).count()
         if total_tasks > 0:
             completion_percentage = (completed_tasks / total_tasks) * 100
-            UserLessonTask.objects.filter(user=user, lesson=self).update(completed_on=completion_percentage)
+            UserLesson.objects.filter(user=user, lesson=self).update(completed_on=completion_percentage)
 
     def __str__(self):
         return self.title
@@ -92,3 +95,18 @@ class UserLessonTask(models.Model):
 
     def __str__(self):
         return f"User: {self.user.username}, Lesson: {self.lesson.title}, Task Type: {self.task_type}"
+
+
+class UserLesson(models.Model):
+    VIEW_STATUS_CHOICES = (
+        ('viewed', _('Просмотрен')),
+        ('not_viewed', _('Не просмотрен')),
+        ('started', _('Начат просмотр')),
+    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    lesson = models.ForeignKey(Lesson, related_name='user_lesson', on_delete=models.CASCADE)
+    view_status = models.CharField(max_length=20, choices=VIEW_STATUS_CHOICES, default='not_viewed')
+    completed_on = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        unique_together = ('user', 'lesson')
