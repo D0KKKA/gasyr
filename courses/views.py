@@ -418,7 +418,9 @@ class UserLessonStatusView(APIView):
         except UserLesson.DoesNotExist:
             return Response({"message": "Урок не найден"}, status=status.HTTP_404_NOT_FOUND)
 
-
+class UserLessonViewSet(viewsets.ModelViewSet):
+    serializer_class = UserLessonSerializer
+    queryset = UserLesson.objects.all()
 
 class TopicView(viewsets.ModelViewSet):
     serializer_class = TopicSerializer
