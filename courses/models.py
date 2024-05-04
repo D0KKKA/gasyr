@@ -33,6 +33,7 @@ class Lesson(models.Model):
     course = models.ForeignKey(Course, related_name='lessons', on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     description = models.TextField()
+    info_text = models.TextField()
     video = models.FileField(upload_to="lesson_videos/")
     duration  = models.CharField(max_length=255, help_text=_("Duration in minutes"))
 

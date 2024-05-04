@@ -33,6 +33,7 @@ class TestTaskSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class UserLessonTaskSerializer(serializers.ModelSerializer):
+    lesson = LessonSerializer(read_only=True)
     class Meta:
         model = UserLessonTask
         fields = '__all__'
