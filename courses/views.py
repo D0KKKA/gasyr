@@ -64,6 +64,13 @@ class CourseViewSet(viewsets.ModelViewSet):
         """
         return super().destroy(request, *args, **kwargs)
 
+    @action(detail=True, methods=['get'])
+    def list_lessons_by_course_id(self, request, id=None):
+        course = self.get_object()
+        lessons = Lesson.objects.filter(course=course)
+        serializer = LessonSerializer(lessons, many=True)
+        return Response(serializer.data)
+
 
 
 
@@ -120,6 +127,7 @@ class LessonDetailView(generics.RetrieveUpdateDestroyAPIView):
         Удалить урок
         """
         return super().destroy(request, *args, **kwargs)
+
 
 
 
