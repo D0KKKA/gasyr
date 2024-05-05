@@ -17,6 +17,8 @@ urlpatterns = [
     path('code_tasks/<int:task_id>/submit/', CodeTaskSubmitView.as_view(), name='code-task-submit'),
 
     path('lessons/<int:lesson_id>/status/', UserLessonStatusView.as_view(), name='user_lesson_status'),
+
+    path('course/<int:course_id>/topic/', TopicsByCourseAPIView.as_view(), name='topics-by-course'),
 ]
 
 router = DefaultRouter()

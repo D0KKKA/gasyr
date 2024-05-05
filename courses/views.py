@@ -425,3 +425,10 @@ class UserLessonViewSet(viewsets.ModelViewSet):
 class TopicView(viewsets.ModelViewSet):
     serializer_class = TopicSerializer
     queryset = Topic.objects.all()
+
+class TopicsByCourseAPIView(generics.ListAPIView):
+    serializer_class = TopicSerializer
+
+    def get_queryset(self):
+        course_id = self.kwargs['course_id']  # Получаем course_id из URL
+        return Topic.objects.filter(course_id=course_id)
